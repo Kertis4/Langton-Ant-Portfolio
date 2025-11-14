@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eoin Curtis - Portfolio</title>
+    <style>
+        :root {
+            --color-bg: #0a0a0a;
+            --color-surface: #1a1a1a;
+            --color-text: #e0e0e0;
+            --color-text-secondary: #a0a0a0;
+            --color-primary: #32b8c6;
+            --color-accent: #ff5459;
+            --color-grid: #2a2a2a;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--color-bg);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+
+        #ant-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(10, 10, 10, 0) 100%);
+        }
+
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: emerge 2s ease-out;
+        }
+
+
+        @keyframes emerge {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+                letter-spacing: 10px;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: normal;
+            }
+        }
+
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--color-text-secondary);
+            margin-top: 10px;
+        }
+
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+
+        .nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid var(--color-grid);
+            background: rgba(26, 26, 26, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--color-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+
+        .nav a:hover::before {
+            left: 0;
+        }
+
+
+        .nav a:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+
+        section {
+            margin: 80px 0;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 40px;
+            border: 1px solid var(--color-grid);
+            backdrop-filter: blur(10px);
+        }
+
+
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--color-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            animation: expand 1s ease-out forwards;
+        }
+
+
+        @keyframes expand {
+            to {
+                width: 100%;
+            }
+        }
+
+
+        /* Work Experience Styles */
+        .experience-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+
+        .experience-item {
+            background: rgba(42, 42, 42, 0.6);
+            border: 1px solid var(--color-grid);
+            padding: 30px;
+            border-left: 3px solid var(--color-primary);
+            transition: all 0.3s ease;
+        }
+
+
+        .experience-item:hover {
+            background: rgba(50, 184, 198, 0.1);
+            transform: translateX(5px);
+        }
+
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+
+        .experience-title h3 {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+
+        .experience-company {
+            color: var(--color-text);
+            font-size: 1.1rem;
+        }
+
+
+        .experience-date {
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+
+        .experience-item ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+
+        .experience-item li {
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+
+        .experience-item li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+        }
+
+
+        /* Project Grid - Vertical Layout with Large Images */
+        .project-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+
+        .project-card {
+            background: rgba(42, 42, 42, 0.6);
+            border: none;
+            padding: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 12px;
+        }
+
+
+        .project-card:hover::before {
+            opacity: 0.3;
+        }
+
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(50, 184, 198, 0.2);
+        }
+
+
+        .project-image-container {
+            width: 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+
+        .project-image-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(50, 184, 198, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+
+        /* Image Carousel Styles */
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .carousel-images {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .project-image {
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 8px;
+            filter: brightness(1.05) contrast(1.08);
+            transition: all 0.4s ease;
+            display: block;
+        }
+
+
+        .carousel-images .project-image {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+
+        .carousel-images .project-image.active {
+            opacity: 1;
+            position: relative;
+            pointer-events: auto;
+        }
+
+
+        .project-card:hover .project-image {
+            transform: scale(1.02);
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+
+        /* Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid var(--color-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+
+        .carousel-dot.active {
+            background: var(--color-primary);
+            transform: scale(1.2);
+        }
+
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(50, 184, 198, 0.2);
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+
+        .carousel-arrow:hover {
+            background: var(--color-primary);
+            color: var(--color-bg);
+        }
+
+
+        .carousel-arrow.prev {
+            left: 20px;
+        }
+
+
+        .carousel-arrow.next {
+            right: 20px;
+        }
+
+
+        .project-content {
+            padding: 40px 50px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: start;
+            background: rgba(42, 42, 42, 0.4);
+            border-radius: 0 0 12px 12px;
+        }
+
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+
+        .project-card h3 {
+            color: var(--color-primary);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+
+        .project-description {
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+        }
+
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+
+        .tech-tag {
+            background: rgba(50, 184, 198, 0.2);
+            color: var(--color-primary);
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            border: 1px solid var(--color-primary);
+            border-radius: 4px;
+        }
+
+
+        .award-badge {
+            padding: 12px 15px;
+            background: rgba(255, 84, 89, 0.1);
+            border-left: 3px solid var(--color-accent);
+            color: var(--color-accent);
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+
+        .project-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+
+        .project-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+
+        .project-link:hover {
+            background: var(--color-primary);
+            color: var(--color-bg);
+            transform: translateY(-2px);
+        }
+
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+
+        .skill-item {
+            background: rgba(42, 42, 42, 0.6);
+            padding: 20px;
+            border-left: 3px solid var(--color-primary);
+            transition: all 0.3s ease;
+        }
+
+
+        .skill-item:hover {
+            background: rgba(50, 184, 198, 0.1);
+            transform: translateX(5px);
+        }
+
+
+        .skill-item h4 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+
+        .contact-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .contact-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--color-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+
+        .contact-link:hover::before {
+            left: 0;
+        }
+
+
+        .contact-link:hover {
+            color: var(--color-bg);
+        }
+
+
+        .achievements {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+
+        .achievement {
+            background: rgba(42, 42, 42, 0.6);
+            padding: 15px 20px;
+            border-left: 3px solid var(--color-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .achievement:hover {
+            background: rgba(50, 184, 198, 0.1);
+            transform: translateX(5px);
+            border-left-color: var(--color-accent);
+        }
+
+
+        .achievement-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .achievement-title {
+            flex: 1;
+        }
+
+
+        .achievement-icon {
+            color: var(--color-primary);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+
+        .achievement.expanded .achievement-icon {
+            transform: rotate(180deg);
+        }
+
+
+        .achievement-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-top: 0;
+        }
+
+
+        .achievement.expanded .achievement-details {
+            max-height: 200px;
+            margin-top: 15px;
+        }
+
+
+        .achievement-details p {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+
+        .achievement-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+
+        .achievement-link:hover {
+            background: var(--color-primary);
+            color: var(--color-bg);
+        }
+
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--color-grid);
+            margin-top: 80px;
+        }
+
+
+        @media (max-width: 968px) {
+            .project-image-container {
+                min-height: 400px;
+                padding: 30px;
+            }
+            
+            .project-content {
+                grid-template-columns: 1fr;
+                padding: 30px;
+                gap: 25px;
+            }
+            
+            .project-actions {
+                align-items: flex-start;
+            }
+
+            .carousel-arrow {
+                width: 35px;
+                height: 35px;
+            }
+
+            .carousel-arrow.prev {
+                left: 10px;
+            }
+
+            .carousel-arrow.next {
+                right: 10px;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+
+            section {
+                padding: 30px 20px;
+            }
+            
+            .project-image-container {
+                min-height: 300px;
+                padding: 20px;
+            }
+            
+            .project-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="ant-canvas"></canvas>
+    
+    <div class="content">
+        <header>
+            <h1>Eoin Curtis</h1>
+            <p class="tagline">Computational Social Science Student | Full-Stack Developer | System Administrator</p>
+            
+            <nav class="nav">
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="#achievements">Achievements</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
+
+
+        <section id="about">
+            <h2>About Me</h2>
+            <p style="line-height: 1.8; color: var(--color-text-secondary); font-size: 1.1rem;">
+                3rd-year Computational Social Science student at University College Dublin with a strong technical foundation across Mathematics, Statistics, Economics, and Sociology. Full-stack developer specializing in backend engineering with Python and Golang, and experienced in building robust frontend applications with React. Skilled in cloud deployment, container orchestration, and system administration. Recognized by Microsoft, the CSO, and UCD for technical innovation, applied research, and impactful technical contributions.
+            </p>
+        </section>
+
+
+        <section id="experience">
+            <h2>Work Experience</h2>
+            <div class="experience-grid">
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div class="experience-title">
+                            <h3>Software Engineer Intern (Upcoming)</h3>
+                            <div class="experience-company">Microsoft, Dublin</div>
+                        </div>
+                        <div class="experience-date">Jun 2026 – Aug 2026</div>
+                    </div>
+                    <ul>
+                        <li>Azure Hyper Scale Network team</li>
+                        <li>Working on Hardware and Software Network infrastructure</li>
+                        <li>Focus on Networking, Encryption, and Security</li>
+                    </ul>
+                </div>
+
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div class="experience-title">
+                            <h3>System Administrator</h3>
+                            <div class="experience-company">Netsoc UCD, Dublin</div>
+                        </div>
+                        <div class="experience-date">Oct 2025 – Present</div>
+                    </div>
+                    <ul>
+                        <li>Leading migration of Netsoc's infrastructure to new server environment to improve reliability and maintainability</li>
+                        <li>Designing internal automation tools and workflows to streamline system administration</li>
+                        <li>Developing member hosting platform for easy deployment and management of websites</li>
+                    </ul>
+                </div>
+
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div class="experience-title">
+                            <h3>Programming Instructor</h3>
+                            <div class="experience-company">Searsol, Dublin</div>
+                        </div>
+                        <div class="experience-date">Jun 2025 – Jul 2025</div>
+                    </div>
+                    <ul>
+                        <li>Led summer programming camp teaching Python, HTML, and CSS to ~15 students</li>
+                        <li>Guided projects including games, text adventures, and personal websites</li>
+                    </ul>
+                </div>
+
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div class="experience-title">
+                            <h3>Full Stack Developer</h3>
+                            <div class="experience-company">University College Dublin</div>
+                        </div>
+                        <div class="experience-date">Jan 2025 – Jun 2025</div>
+                    </div>
+                    <ul>
+                        <li>Engineered full-stack application (React + Tailwind + Flask) showcased to thousands at UCD Festival</li>
+                        <li>Integrated PxStat and OpenAI APIs to automate insights from CSO data</li>
+                        <li>Collaborated with CSO Head of Data Science, presenting technical insights and outcomes</li>
+                        <li>Maintained 100% uptime under live event traffic by managing backend stability and monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div class="project-grid">
+                <!-- Asteroid Predictor -->
+                <div class="project-card">
+                    <div class="project-image-container">
+                        <img src="project-images/AsteroidTracker3d.png" alt="Asteroid Predictor" class="project-image">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-info">
+                            <div>
+                                <h3>Asteroid Predictor</h3>
+                                <p class="project-description">Developed a full-stack web app using the NASA API to visualize real asteroid trajectories in 3D with Three.js. Built asynchronous FastAPI endpoints with MySQL caching to optimize data retrieval and API performance. Integrated the OpenAI API to generate AI-driven asteroid reports with interactive graphs in new browser tabs.</p>
+                            </div>
+                            <div class="tech-tags">
+                                <span class="tech-tag">FastAPI</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">Three.js</span>
+                            </div>
+                            <div class="award-badge">
+                                🏆 4th Place, Hackathlone (50 teams, 200+ participants)
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://github.com/layli43/Hackathlone-astro-nuts" class="project-link" target="_blank">View Project →</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Spotify Playlist Automator -->
+                <div class="project-card">
+                    <div class="project-image-container">
+                        <img src="project-images/spotify-automator.png" alt="Spotify Automator" class="project-image">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-info">
+                            <div>
+                                <h3>Spotify Playlist Automator</h3>
+                                <p class="project-description">Built a backend service to automate playlist generation based on users' last 50 listened songs. Utilized FastAPI and Asyncio for asynchronous processing, improving performance and responsiveness. Integrated with Spotify API to fetch and process user data securely and efficiently.</p>
+                            </div>
+                            <div class="tech-tags">
+                                <span class="tech-tag">FastAPI</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">OAuth</span>
+                                <span class="tech-tag">Spotify API</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://github.com/Kertis4/spotify-last-50" class="project-link" target="_blank">View Project →</a>
+                        </div>
+                    </div>
+                </div>
+
+
+              
+<div class="project-card">
+    <div class="project-image-container">
+        <div class="image-carousel">
+            <div class="carousel-images">
+                <img src="project-images/ClashRoyaleBuiltDeck.png" alt="Clash Royale Built Deck" class="project-image active">
+                <img src="project-images/ClashRoyaleDashboard.png" alt="Clash Royale Dashboard" class="project-image">
+            </div>
+            <div class="carousel-arrow prev" onclick="changeImage(this, -1)">‹</div>
+            <div class="carousel-arrow next" onclick="changeImage(this, 1)">›</div>
+            <div class="carousel-nav">
+                <div class="carousel-dot active" onclick="goToImage(this, 0)"></div>
+                <div class="carousel-dot" onclick="goToImage(this, 1)"></div>
+            </div>
+        </div>
+    </div>
+    <div class="project-content">
+        <div class="project-info">
+            <div>
+                <h3>Clash Royale Deck Builder</h3>
+                <p class="project-description">Developed a web app to create decks for Clash Royale with user authentication and a personalized dashboard. Built a Python API crawler to enrich game data not provided by the official API. Implemented a conditional probability-based deck-building algorithm using weighted probabilities. Deployed on Ubuntu with Nginx, implementing monitoring and debugging for stability.</p>
+            </div>
+            <div class="tech-tags">
+                <span class="tech-tag">React</span>
+                <span class="tech-tag">Tailwind</span>
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Flask</span>
+                <span class="tech-tag">MySQL</span>
+            </div>
+        </div>
+        <div class="project-actions">
+            <a href="https://github.com/kertis4/clash-royale-deck-maker" class="project-link" target="_blank">View Project →</a>
+        </div>
+    </div>
+</div>
+
+
+                <!-- CSO Data Insights Platform -->
+                <div class="project-card">
+                    <div class="project-image-container">
+                        <img src="project-images/HeroPageUI.png" alt="CSO Data Platform" class="project-image">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-info">
+                            <div>
+                                <h3>CSO Data Insights Platform</h3>
+                                <p class="project-description">Engineered full-stack application (React + Tailwind + Flask) showcased to thousands at UCD Festival. Integrated PxStat and OpenAI APIs to automate insights from CSO data. Collaborated with the CSO Head of Data Science, presenting technical insights and outcomes that attracted professional interest. Maintained 100% uptime under live event traffic.</p>
+                            </div>
+                            <div class="tech-tags">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">Tailwind</span>
+                                <span class="tech-tag">Flask</span>
+                                <span class="tech-tag">OpenAI API</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://festival.ucd.ie/events/understanding-ireland-through-ai-potentials-and-limitations/" class="project-link" target="_blank">View Project →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="skills">
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <h4>Languages</h4>
+                    <p>Python, Golang, TypeScript, JavaScript, HTML, CSS, SQL</p>
+                </div>
+                <div class="skill-item">
+                    <h4>Frameworks & Libraries</h4>
+                    <p>React, Flask, FastAPI, Pandas, NumPy, Matplotlib, scikit-learn</p>
+                </div>
+                <div class="skill-item">
+                    <h4>Developer Tools</h4>
+                    <p>Git, Docker, Nginx, Linux, Vite</p>
+                </div>
+                <div class="skill-item">
+                    <h4>Backend Development</h4>
+                    <p>Node.js, Python, Database Design, API Integration</p>
+                </div>
+                <div class="skill-item">
+                    <h4>Cloud & DevOps</h4>
+                    <p>Container Orchestration, System Administration, Deployment</p>
+                </div>
+                <div class="skill-item">
+                    <h4>Databases</h4>
+                    <p>SQLite, MySQL, SQL, Database Architecture</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="achievements">
+            <h2>Achievements</h2>
+            <div class="achievements">
+                <div class="achievement" data-achievement="hackathlone">
+                    <div class="achievement-content">
+                        <span class="achievement-title">4th Place, Hackathlone, TUS Athlone</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Placed 4th out of 50 teams (200+ participants) with the Asteroid Predictor project - a full-stack web app using NASA API, Three.js 3D visualization, and AI-driven insights.</p>
+                        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7381740562808356864/" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+
+
+                <div class="achievement" data-achievement="cso">
+                    <div class="achievement-content">
+                        <span class="achievement-title">Presented Project to top stakeholders in the CSO</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Collaborated with the CSO Head of Data Science to present a full-stack application integrating PxStat and OpenAI APIs for automated data insights.</p>
+                        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7353886233485352960/" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+
+
+                <div class="achievement" data-achievement="ucd-festival">
+                    <div class="achievement-content">
+                        <span class="achievement-title">Selected for UCD Festival</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Project showcased to thousands at UCD Festival, maintaining 100% uptime under live event traffic through robust backend monitoring.</p>
+                        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7337522500458733569/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7337522500458733569%29" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+
+
+                <div class="achievement" data-achievement="data4good">
+                    <div class="achievement-content">
+                        <span class="achievement-title">Runner-Up for Technical Excellence, Data4Good Festival, Hertie School, Berlin</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Runner up for technical excellence at the Data4Good Festival in Berlin, demonstrating innovative approaches to data-driven social impact.</p>
+                        <a href="https://www.ucd.ie/socscilaw/newsandevents/ucdstudentteamwinsrunner-upfortechnicalexcellenceatthedata4goodfestival/" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+
+
+                <div class="achievement" data-achievement="robo-rugby">
+                    <div class="achievement-content">
+                        <span class="achievement-title">Quarter Finals in UCD Robo-Rugby</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Advanced to quarter finals in UCD Robo-Rugby competition, showcasing robotics programming and competitive problem-solving skills.</p>
+                        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7318318433224323074/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7318318433224323074%29" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+
+
+                <div class="achievement" data-achievement="class-rep">
+                    <div class="achievement-content">
+                        <span class="achievement-title">Voted Class Representative for stage 2 Computational Social Science</span>
+                        <span class="achievement-icon">▼</span>
+                    </div>
+                    <div class="achievement-details">
+                        <p>Elected by peers to represent Stage 2 Computational Social Science students, bridging communication between students and faculty.</p>
+                        <a href="https://www.linkedin.com/in/eoin-curtis-6b2496330/" class="achievement-link" target="_blank">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="contact">
+            <h2>Get In Touch</h2>
+            <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 30px;">
+                Interested in collaborating or have a question? Feel free to reach out!
+            </p>
+            <div class="contact-links">
+                <a href="mailto:eoincur14@gmail.com" class="contact-link">Email</a>
+                <a href="http://github.com/kertis4" class="contact-link" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/eoin-curtis-6b2496330/" class="contact-link" target="_blank">LinkedIn</a>
+            </div>
+        </section>
+
+
+        <footer>
+            <p>&copy; 2025 Eoin Curtis. Inspired by the emergent complexity of Langton's Ant.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">From simple rules, complex patterns emerge.</p>
+        </footer>
+    </div>
+
+
+    <script>
+        // Langton's Ant simulation
+        const canvas = document.getElementById('ant-canvas');
+        const ctx = canvas.getContext('2d');
+
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+
+        const cellSize = 8;
+        const cols = Math.floor(canvas.width / cellSize);
+        const rows = Math.floor(canvas.height / cellSize);
+        
+        const grid = Array(rows).fill(null).map(() => Array(cols).fill(0));
+        
+        const ants = [
+            { x: Math.floor(cols / 2), y: Math.floor(rows / 2), dir: 0 },
+            { x: Math.floor(cols / 3), y: Math.floor(rows / 3), dir: 1 },
+            { x: Math.floor(2 * cols / 3), y: Math.floor(2 * rows / 3), dir: 2 }
+        ];
+        
+        const dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+        const colors = ['#0a0a0a', '#1a3a3a', '#32b8c6', '#ff5459'];
+
+
+        function step() {
+            ants.forEach(ant => {
+                if (ant.x < 0 || ant.x >= cols || ant.y < 0 || ant.y >= rows) {
+                    ant.x = Math.floor(Math.random() * cols);
+                    ant.y = Math.floor(Math.random() * rows);
+                    return;
+                }
+
+
+                const currentColor = grid[ant.y][ant.x];
+                
+                if (currentColor === 0) {
+                    ant.dir = (ant.dir + 1) % 4;
+                } else if (currentColor === 1) {
+                    ant.dir = (ant.dir + 3) % 4;
+                } else if (currentColor === 2) {
+                    ant.dir = (ant.dir + 3) % 4;
+                } else {
+                    ant.dir = (ant.dir + 1) % 4;
+                }
+                
+                grid[ant.y][ant.x] = (currentColor + 1) % 4;
+                
+                ant.x += dirs[ant.dir][0];
+                ant.y += dirs[ant.dir][1];
+            });
+        }
+
+
+        function draw() {
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    if (grid[y][x] > 0) {
+                        ctx.fillStyle = colors[grid[y][x]];
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+        }
+
+
+        let frameCount = 0;
+        function animate() {
+            for (let i = 0; i < 5; i++) {
+                step();
+            }
+            
+            if (frameCount % 2 === 0) {
+                draw();
+            }
+            frameCount++;
+            
+            requestAnimationFrame(animate);
+        }
+
+
+        animate();
+
+
+        // Image Carousel Functionality
+        function changeImage(button, direction) {
+            const carousel = button.closest('.image-carousel');
+            const images = carousel.querySelectorAll('.project-image');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            
+            let currentIndex = 0;
+            images.forEach((img, index) => {
+                if (img.classList.contains('active')) {
+                    currentIndex = index;
+                }
+            });
+            
+            images[currentIndex].classList.remove('active');
+            dots[currentIndex].classList.remove('active');
+            
+            let newIndex = currentIndex + direction;
+            if (newIndex >= images.length) newIndex = 0;
+            if (newIndex < 0) newIndex = images.length - 1;
+            
+            images[newIndex].classList.add('active');
+            dots[newIndex].classList.add('active');
+        }
+
+
+        function goToImage(dot, index) {
+            const carousel = dot.closest('.image-carousel');
+            const images = carousel.querySelectorAll('.project-image');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            
+            images.forEach(img => img.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            images[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+
+        // Achievement expansion functionality
+        document.querySelectorAll('.achievement').forEach(achievement => {
+            achievement.addEventListener('click', function(e) {
+                if (e.target.classList.contains('achievement-link')) {
+                    return;
+                }
+                
+                document.querySelectorAll('.achievement').forEach(other => {
+                    if (other !== this && other.classList.contains('expanded')) {
+                        other.classList.remove('expanded');
+                    }
+                });
+                
+                this.classList.toggle('expanded');
+            });
+        });
+    </script>
+</body>
+</html>
